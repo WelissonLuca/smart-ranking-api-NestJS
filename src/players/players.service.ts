@@ -7,7 +7,6 @@ export class PlayersService {
   private players: Player[] = [];
   private readonly logger = new Logger(PlayersService.name);
   async createPlayer(createPlayerDTO: CreatePlayerDTO): Promise<void> {
-    this.logger.log(`createPlayerDTO: ${createPlayerDTO}`);
     this.create(createPlayerDTO);
   }
 
@@ -23,6 +22,7 @@ export class PlayersService {
       positionRanking: 1,
       urlPlayerPhoto: 'www.teste/123.jpg',
     };
+    this.logger.log(`createPlayerDTO: ${JSON.stringify(player)}`);
 
     this.players.push(player);
   }
