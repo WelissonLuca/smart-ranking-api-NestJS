@@ -32,6 +32,12 @@ export class PlayersService {
     return player;
   }
 
+  async deletePlayer(email: string): Promise<void> {
+    const player = await this.players.find((player) => player.email === email);
+    if (!player) throw new Error('Player not found');
+
+    this.players = this.players.filter((p) => p.email !== player.email);
+  }
   private create(createPlayerDTO: CreatePlayerDTO): void {
     const { name, phone, email } = createPlayerDTO;
 
