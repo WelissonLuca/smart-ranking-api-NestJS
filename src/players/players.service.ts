@@ -9,6 +9,22 @@ export class PlayersService {
   async createPlayer(createPlayerDTO: CreatePlayerDTO): Promise<void> {
     this.create(createPlayerDTO);
   }
+  async updatePlayer(
+    email: string,
+    createPlayerDTO: CreatePlayerDTO,
+  ): Promise<void> {
+    const playerAlreadyExists = await this.players.find(
+      (player) => player.email === email,
+    );
+
+    if (!playerAlreadyExists) throw new Error('Player not found');
+
+    this.update(playerAlreadyExists, createPlayerDTO);
+  }
+
+  async getPlayers(): Promise<Player[]> {
+    return this.players;
+  }
 
   private create(createPlayerDTO: CreatePlayerDTO): void {
     const { name, phone, email } = createPlayerDTO;
@@ -25,5 +41,11 @@ export class PlayersService {
     this.logger.log(`createPlayerDTO: ${JSON.stringify(player)}`);
 
     this.players.push(player);
+  }
+
+  private update(player: Player, createPlayerDTO: CreatePlayerDTO): void {
+    const { name } = createPlayerDTO;
+
+    player.name = name;
   }
 }
