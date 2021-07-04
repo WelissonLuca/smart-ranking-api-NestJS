@@ -22,4 +22,8 @@ export class PlayersController {
   async getPlayers(): Promise<Player[]> {
     return this.playersService.getPlayers();
   }
+  @Get(':email')
+  async getOnePlayer(@Param('email') email: string): Promise<Player> {
+    return this.playersService.getOnePlayer(email);
+  }
 }

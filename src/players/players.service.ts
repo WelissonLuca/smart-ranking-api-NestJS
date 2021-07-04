@@ -26,6 +26,12 @@ export class PlayersService {
     return this.players;
   }
 
+  async getOnePlayer(email: string): Promise<Player> {
+    const player = await this.players.find((player) => player.email === email);
+    if (!player) throw new Error('Player not found');
+    return player;
+  }
+
   private create(createPlayerDTO: CreatePlayerDTO): void {
     const { name, phone, email } = createPlayerDTO;
 
