@@ -11,6 +11,7 @@ import {
 
 import { CreatePlayerDTO } from './dtos/CreatePlayer.dto';
 import { Player } from './interfaces/Player.interface';
+import { CustomPipeValidationDataPlayerPipe } from './pipes/customPipeValidationDataPlayer.pipe';
 import { PlayersService } from './players.service';
 
 @Controller('api/v1/players')
@@ -23,7 +24,7 @@ export class PlayersController {
   }
   @Put(':email')
   async updatePlayer(
-    @Param('email') email: string,
+    @Param('email', CustomPipeValidationDataPlayerPipe) email: string,
     @Body() updatePlayerDTO: CreatePlayerDTO,
   ) {
     await this.playersService.updatePlayer(email, updatePlayerDTO);
@@ -33,12 +34,16 @@ export class PlayersController {
     return this.playersService.getPlayers();
   }
   @Get(':email')
-  async getOnePlayer(@Param('email') email: string): Promise<Player> {
+  async getOnePlayer(
+    @Param('email', CustomPipeValidationDataPlayerPipe) email: string,
+  ): Promise<Player> {
     return this.playersService.getOnePlayer(email);
   }
 
   @Delete(':email')
-  async deletePlayer(@Param('email') email: string): Promise<void> {
+  async deletePlayer(
+    @Param('email', CustomPipeValidationDataPlayerPipe) email: string,
+  ): Promise<void> {
     return this.playersService.deletePlayer(email);
   }
 }
