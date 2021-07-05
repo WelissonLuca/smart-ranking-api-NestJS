@@ -10,7 +10,6 @@ export class CustomPipeValidationDataPlayerPipe implements PipeTransform {
     const email = isEmail(input);
     console.log(email);
     if (!email) throw new BadRequestException('Invalid email');
-
     return input;
   }
 }

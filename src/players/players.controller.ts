@@ -10,10 +10,10 @@ import {
 } from '@nestjs/common';
 
 import { CreatePlayerDTO } from './dtos/CreatePlayer.dto';
+import { UpdatePlayerDTO } from './dtos/UpdatePlayer.dto';
 import { Player } from './interfaces/Player.interface';
 import { CustomPipeValidationDataPlayerPipe } from './pipes/customPipeValidationDataPlayer.pipe';
 import { PlayersService } from './players.service';
-
 @Controller('api/v1/players')
 export class PlayersController {
   constructor(private readonly playersService: PlayersService) {}
@@ -25,7 +25,7 @@ export class PlayersController {
   @Put(':email')
   async updatePlayer(
     @Param('email', CustomPipeValidationDataPlayerPipe) email: string,
-    @Body() updatePlayerDTO: CreatePlayerDTO,
+    @Body() updatePlayerDTO: UpdatePlayerDTO,
   ) {
     await this.playersService.updatePlayer(email, updatePlayerDTO);
   }
