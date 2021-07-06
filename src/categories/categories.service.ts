@@ -30,4 +30,11 @@ export class CategoryService {
   async listCategories(): Promise<Category[]> {
     return this.categoryModel.find().exec();
   }
+  async listById(id: string): Promise<Category> {
+    const category = await this.categoryModel.findOne({ _id: id }).exec();
+
+    if (!category) throw new BadRequestException('Category not found');
+
+    return category;
+  }
 }
