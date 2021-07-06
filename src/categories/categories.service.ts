@@ -26,4 +26,8 @@ export class CategoryService {
 
     return await categoryToCreate.save();
   }
+
+  async listCategories(): Promise<Category[]> {
+    return this.categoryModel.find().exec();
+  }
 }
