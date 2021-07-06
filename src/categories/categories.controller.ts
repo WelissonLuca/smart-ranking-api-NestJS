@@ -1,4 +1,10 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { CategoryService } from './categories.service';
 import { CreateCategoryDTO } from './dtos/CreateCategory.dto';
 import { Category } from './interface/Category.interface';
@@ -7,6 +13,7 @@ import { Category } from './interface/Category.interface';
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
   @Post()
+  @UsePipes(ValidationPipe)
   async createCategories(
     @Body() createCategoryDTO: CreateCategoryDTO,
   ): Promise<Category> {
