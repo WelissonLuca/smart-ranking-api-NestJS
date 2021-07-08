@@ -1,7 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, UpdateAggregationStage } from 'mongoose';
 import { CreateCategoryDTO } from './dtos/CreateCategory.dto';
+import { UpdateCategoryDTO } from './dtos/UpdateCategory.dto';
 import { Category } from './interface/Category.interface';
 
 @Injectable()
@@ -15,12 +16,7 @@ export class CategoryService {
   ): Promise<Category> {
     const { category } = createCategoryDTO;
 
-    const categoryAlreadyExists = await this.categoryModel
-      .findOne({ category })
-      .exec();
-
-    if (categoryAlreadyExists)
-      throw new BadRequestException('Category already exists');
+    await this.checkIfCategoryExists(category);
 
     const categoryToCreate = new this.categoryModel(createCategoryDTO);
 
@@ -31,10 +27,31 @@ export class CategoryService {
     return this.categoryModel.find().exec();
   }
   async listById(id: string): Promise<Category> {
-    const category = await this.categoryModel.findOne({ _id: id }).exec();
+    await this.checkIfCategoryDoesNotExist(id);
 
-    if (!category) throw new BadRequestException('Category not found');
+    return await this.categoryModel.findOne({ _id: id }).exec();
+  }
 
-    return category;
+  async updateCategories(
+    id: string,
+    updateCategoryDTO: UpdateCategoryDTO,
+  ): Promise<void> {
+    await this.checkIfCategoryDoesNotExist(id);
+
+    await this.categoryModel
+      .updateOne({ id }, { $set: { updateCategoryDTO } })
+      .exec();
+  }
+
+  private async checkIfCategoryDoesNotExist(id: string): Promise<Category> {
+    const result = await this.categoryModel.findOne({ _id: id }).exec();
+    if (!result) throw new BadRequestException('Category not found');
+    return result;
+  }
+  private async checkIfCategoryExists(category: string): Promise<Category> {
+    const result = await this.categoryModel.findOne({ category }).exec();
+    if (result) throw new BadRequestException('Category already exists');
+
+    return result;
   }
 }
