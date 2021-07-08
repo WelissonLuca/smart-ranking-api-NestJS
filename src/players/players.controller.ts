@@ -19,14 +19,16 @@ export class PlayersController {
   constructor(private readonly playersService: PlayersService) {}
   @Post()
   @UsePipes(ValidationPipe)
-  async createPlayer(@Body() createPlayerDTO: CreatePlayerDTO) {
-    await this.playersService.createPlayer(createPlayerDTO);
+  async createPlayer(
+    @Body() createPlayerDTO: CreatePlayerDTO,
+  ): Promise<Player> {
+    return await this.playersService.createPlayer(createPlayerDTO);
   }
   @Put(':email')
   async updatePlayer(
     @Param('email', CustomPipeValidationDataPlayerPipe) email: string,
     @Body() updatePlayerDTO: UpdatePlayerDTO,
-  ) {
+  ): Promise<void> {
     await this.playersService.updatePlayer(email, updatePlayerDTO);
   }
   @Get()

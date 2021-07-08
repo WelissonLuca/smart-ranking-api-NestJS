@@ -26,8 +26,6 @@ export class PlayersService {
     email: string,
     updatePlayerDTO: UpdatePlayerDTO,
   ): Promise<void> {
-    await this.checkIfPlayerDoesNotExist(email);
-
     await this.update(email, updatePlayerDTO);
   }
 
@@ -54,20 +52,21 @@ export class PlayersService {
   private async update(
     email: string,
     updatePlayerDTO: UpdatePlayerDTO,
-  ): Promise<Player> {
-    const player = await this.playerModel.findOne({ email }).exec();
-    if (!player) throw new NotFoundException('Player not found');
+  ): Promise<void> {
+    await this.checkIfPlayerDoesNotExist(email);
 
-    return player.update(updatePlayerDTO);
+    await this.playerModel
+      .updateOne({ email }, { $set: updatePlayerDTO })
+      .exec();
   }
   private async checkIfPlayerDoesNotExist(email: string): Promise<Player> {
-    const player = await this.playerModel.findOne({ email }).exec();
-    if (!player) throw new NotFoundException('Player not found');
-    return player;
+    const result = await this.playerModel.findOne({ email }).exec();
+    if (!result) throw new NotFoundException('Player not found');
+    return result;
   }
   private async checkIfPlayerExists(email: string): Promise<Player> {
-    const player = await this.playerModel.findOne({ email }).exec();
-    if (player) throw new BadRequestException('Player already exists');
-    return player;
+    const result = await this.playerModel.findOne({ email }).exec();
+    if (result) throw new BadRequestException('Player already exists');
+    return result;
   }
 }
