@@ -11,5 +11,5 @@ export interface Category extends Document {
 export interface Events {
   name: string;
   operation: string;
-  valeu: number;
+  value: number;
 }

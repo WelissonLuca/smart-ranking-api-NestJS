@@ -1,7 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, UpdateAggregationStage } from 'mongoose';
-import { AssignPlayerToCategoryDTO } from './dtos/AssignPlayerToCategory.dto';
+import { Model } from 'mongoose';
 import { CreateCategoryDTO } from './dtos/CreateCategory.dto';
 import { UpdateCategoryDTO } from './dtos/UpdateCategory.dto';
 import { Category } from './interface/Category.interface';
@@ -9,7 +8,7 @@ import { Category } from './interface/Category.interface';
 @Injectable()
 export class CategoryService {
   constructor(
-    @InjectModel('categories') private readonly categoryModel: Model<Category>,
+    @InjectModel('Category') private readonly categoryModel: Model<Category>,
   ) {}
 
   async createCategories(
@@ -25,7 +24,7 @@ export class CategoryService {
   }
 
   async listCategories(): Promise<Category[]> {
-    return this.categoryModel.find().exec();
+    return this.categoryModel.find().populate('players').exec();
   }
   async listById(id: string): Promise<Category> {
     await this.checkIfCategoryDoesNotExist(id);

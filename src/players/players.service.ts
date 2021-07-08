@@ -13,7 +13,7 @@ UpdatePlayerDTO;
 @Injectable()
 export class PlayersService {
   constructor(
-    @InjectModel('players') private readonly playerModel: Model<Player>,
+    @InjectModel('Player') private readonly playerModel: Model<Player>,
   ) {}
 
   private readonly logger = new Logger(PlayersService.name);
