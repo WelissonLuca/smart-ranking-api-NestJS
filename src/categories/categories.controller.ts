@@ -5,6 +5,7 @@ import {
   Param,
   Post,
   Put,
+  Patch,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -35,10 +36,16 @@ export class CategoryController {
   }
 
   @Put('/:id')
+  @UsePipes(ValidationPipe)
   async updateCategories(
     @Body() updateCategoryDTO: UpdateCategoryDTO,
     @Param('id') id: string,
   ): Promise<void> {
     await this.categoryService.updateCategories(id, updateCategoryDTO);
+  }
+
+  @Post('/:category/:player')
+  async AssignPlayerToCategory(@Param() params: string[]): Promise<void> {
+    return await this.categoryService.AssignPlayerToCategory(params);
   }
 }

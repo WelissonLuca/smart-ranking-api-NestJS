@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, UpdateAggregationStage } from 'mongoose';
+import { AssignPlayerToCategoryDTO } from './dtos/AssignPlayerToCategory.dto';
 import { CreateCategoryDTO } from './dtos/CreateCategory.dto';
 import { UpdateCategoryDTO } from './dtos/UpdateCategory.dto';
 import { Category } from './interface/Category.interface';
@@ -43,6 +44,18 @@ export class CategoryService {
       .exec();
   }
 
+  async AssignPlayerToCategory(params: string[]): Promise<void> {
+    const category = params['category'];
+    const player = params['player'];
+
+    const foundCategory = await this.categoryModel.findOne({ category }).exec();
+    if (!foundCategory) throw new BadRequestException('Category not found');
+
+    foundCategory.players.push(player);
+    await this.categoryModel
+      .updateOne({ category }, { $set: foundCategory })
+      .exec();
+  }
   private async checkIfCategoryDoesNotExist(id: string): Promise<Category> {
     const result = await this.categoryModel.findOne({ _id: id }).exec();
     if (!result) throw new BadRequestException('Category not found');

@@ -7,7 +7,7 @@ export class CreateCategoryDTO {
 
   @IsString()
   @IsNotEmpty()
-  descritpion: string;
+  description: string;
 
   @IsArray()
   @ArrayMinSize(1)
